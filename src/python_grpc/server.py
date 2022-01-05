@@ -23,7 +23,7 @@ class UnaryService(pb2_grpc.UnaryServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     pb2_grpc.add_UnaryServicer_to_server(UnaryService(), server)
-    server.add_insecure_port('[::]:50051')
+    server.add_insecure_port('[::]:8080')
     server.start()
     server.wait_for_termination()
 

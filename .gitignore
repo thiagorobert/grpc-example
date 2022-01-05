@@ -4,3 +4,6 @@ rest_reverse_proxy
 # Intellij
 .idea
 grpc-example.iml
+
+# Private scripts
+docker-push-aws.sh
