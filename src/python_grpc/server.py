@@ -1,4 +1,5 @@
 import grpc
+from grpc_reflection.v1alpha import reflection
 from concurrent import futures
 import time
 import proto.unary_pb2_grpc as pb2_grpc
@@ -19,9 +20,18 @@ class UnaryService(pb2_grpc.UnaryServicer):
 
         return pb2.MessageResponse(**result)
 
+# See https://github.com/grpc/grpc/blob/master/doc/python/server_reflection.md
+def enableReflectionAPI(server):
+    SERVICE_NAMES = (
+        pb2.DESCRIPTOR.services_by_name['Unary'].full_name,
+        reflection.SERVICE_NAME,
+    )
+    reflection.enable_server_reflection(SERVICE_NAMES, server)
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    enableReflectionAPI(server)
+
     pb2_grpc.add_UnaryServicer_to_server(UnaryService(), server)
     server.add_insecure_port('[::]:8080')
     server.start()
