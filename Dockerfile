@@ -18,7 +18,7 @@ RUN tar -zxvf go1.17.5.linux-amd64.tar.gz -C /usr/local/
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 # Install gRPC support in Python.
-RUN pip install grpcio grpcio-tools
+RUN pip install grpcio grpcio-tools grpcio-reflection
 RUN pip install --upgrade protobuf
 
 # Setup $GOBIN and add it to $PATH.
