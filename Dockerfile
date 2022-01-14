@@ -18,7 +18,11 @@ RUN tar -zxvf go1.17.5.linux-amd64.tar.gz -C /usr/local/
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 # Install gRPC support in Python.
-RUN pip install grpcio grpcio-tools grpcio-reflection
+RUN pip install \
+    grpcio \
+    grpcio-health-checking \
+    grpcio-reflection \
+    grpcio-tools
 RUN pip install --upgrade protobuf
 
 # Setup $GOBIN and add it to $PATH.
@@ -80,8 +84,12 @@ RUN go mod tidy -compat=1.17
 RUN go build src/go_rest_proxy/rest_reverse_proxy.go
 
 # Expose requierd ports. This is not required, it's more of a documentation.
+# gRPC server
 EXPOSE 8080
+# REST proxy
 EXPOSE 8081
+# gRPC healthcheck
+EXPOSE 9090
 
 # Copy and run script that starts gRPC server and REST proxy.
 COPY ./bootstrap.sh ${CODE_ROOT}/bootstrap.sh
