@@ -2,4 +2,4 @@
 
 set -e
 
-docker build . -t grpcexample-v`date +"%Y%m%d%H%M%S"`
+docker build "$@" . -t grpcexample-v`date +"%Y%m%d%H%M%S"`
