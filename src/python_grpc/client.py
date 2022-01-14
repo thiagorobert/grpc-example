@@ -11,17 +11,24 @@ def inputFlags():
         '--server_host', dest='server_host', default='localhost', help='server host')
     parser.add_argument(
         '--server_port', dest='server_port', default='8080', help='server port')
+    parser.add_argument(
+        '--cert_path', dest='cert_path', default='', help='path to certificate file')
     return parser.parse_args()
 
 
 class UnaryClient(object):
     """gRPC client."""
 
-    def __init__(self, server_host, server_port):
+    def __init__(self, server_host, server_port, cert_path):
         host_port = '{}:{}'.format(server_host, server_port)
 
         # Instantiate channel.
-        self.channel = grpc.insecure_channel(host_port)
+        if cert_path:
+            with open(cert_path, 'rb') as f:
+                creds = grpc.ssl_channel_credentials(f.read())
+            self.channel = grpc.secure_channel(host_port, creds)
+        else:
+            self.channel = grpc.insecure_channel(host_port)
 
         # Bind client and server.
         self.stub = pb2_grpc.UnaryStub(self.channel)
@@ -35,8 +42,10 @@ class UnaryClient(object):
 if __name__ == '__main__':
     flags = inputFlags()
 
-    print(f'Client talking to "{flags.server_host}:{flags.server_port}"')
+    print(f'\nClient talking to "{flags.server_host}:{flags.server_port}"')
+    if flags.cert_path:
+        print(f'\tusing cert: {flags.cert_path}')
 
-    client = UnaryClient(flags.server_host, flags.server_port)
+    client = UnaryClient(flags.server_host, flags.server_port, flags.cert_path)
     result = client.Run(message='Hello Server you there?')
-    print(f'{result}')
+    print(f'\n{result}')

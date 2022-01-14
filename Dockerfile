@@ -31,10 +31,11 @@ ENV CODE_ROOT=/go/src/thiago.pub/grpc-example
 RUN mkdir -p ${CODE_ROOT}
 
 # Copy code.
-COPY tools ${CODE_ROOT}/tools
 COPY google ${CODE_ROOT}/google
 COPY proto ${CODE_ROOT}/proto
 COPY src ${CODE_ROOT}/src
+COPY tls_data ${CODE_ROOT}/tls_data
+COPY tools ${CODE_ROOT}/tools
 
 # Install protoc-gen-go (see https://github.com/grpc-ecosystem/grpc-gateway/)
 WORKDIR ${CODE_ROOT}/tools

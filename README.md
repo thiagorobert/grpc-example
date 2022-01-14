@@ -22,7 +22,8 @@ not `src/python_grpc/`;
 
 ### Docker
 
-Tested with Docker version `18.03.1-ce, build 9ee9f40`.
+Tested with Docker version `18.03.1-ce, build 9ee9f40`. Note TLS is enabled when
+running via Docker.
 
 ###### Build image
 ```
@@ -102,7 +103,7 @@ go mod tidy -compat=1.17
 go build src/go_rest_proxy/rest_reverse_proxy.go
 ```
 
-######  Start Go REST proxy in the background
+######  Start REST proxy in the background
 ```
 ./rest_reverse_proxy &
 ```
@@ -111,3 +112,9 @@ go build src/go_rest_proxy/rest_reverse_proxy.go
 ```
 curl -X POST localhost:8081/v1/response -d '{"message": "test"}'
 ```
+
+#### TLS
+
+Use flag `--cert_path` to enable TLS. Note the Python gRPC server will also
+require flag `--private_key_path`. TLS data (certificate, private key) is
+available under `tls_data` directory.
